@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'icons.svg', 'apple-touch-icon.png'],
+      includeAssets: ['favicon.svg', 'icons.svg'],
       manifest: {
         name: 'UsingAI - 智能体思想驿站',
         short_name: 'UsingAI',
