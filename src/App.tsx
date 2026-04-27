@@ -3,28 +3,25 @@ import { POSTS as STATIC_POSTS, TOOLS } from './data/content';
 import type { BlogPost } from './data/content';
 import './App.css';
 
-// 动态扫描 src/posts 目录下的所有 .md 文件
 const markdownFiles = import.meta.glob('./posts/*.md', { eager: true, query: '?raw' });
 
 const App: React.FC = () => {
   const [currentPost, setCurrentPost] = useState<BlogPost | null>(null);
   const [flippedToolId, setFlippedToolId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [dynamicPosts, setDynamicPosts] = useState<BlogPost[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 20;
 
-  // 解析 Markdown 文件
   useEffect(() => {
     const parsedPosts: BlogPost[] = Object.entries(markdownFiles).map(([path, content]) => {
       const rawContent = (content as any).default as string;
       const id = path.split('/').pop()?.replace('.md', '') || 'unknown';
-      
       const parts = rawContent.split('---');
       if (parts.length >= 3) {
         const header = parts[1];
         const body = parts.slice(2).join('---').trim();
-        
         const getValue = (key: string) => {
           const match = header.match(new RegExp(`${key}:\\s*(.*)`));
           return match ? match[1].trim().replace(/^"(.*)"$/, '$1') : '';
@@ -35,6 +32,7 @@ const App: React.FC = () => {
           title: getValue('title') || id,
           date: getValue('date') || '2026-01-01',
           tag: getValue('tag') || '未分类',
+          image: getValue('image'),
           excerpt: getValue('excerpt') || body.substring(0, 100) + '...',
           content: body,
           readTime: `${Math.ceil(body.length / 500)} min read`
@@ -42,7 +40,6 @@ const App: React.FC = () => {
       }
       return null;
     }).filter(Boolean) as BlogPost[];
-
     setDynamicPosts(parsedPosts);
   }, []);
 
@@ -50,27 +47,20 @@ const App: React.FC = () => {
     return [...STATIC_POSTS, ...dynamicPosts].sort((a, b) => 
       new Date(b.date).getTime() - new Date(a.date).getTime()
     );
-  }, [dynamicPosts]);
+  }, [dynamicPosts, STATIC_POSTS]);
 
-  const categories = useMemo(() => Array.from(new Set(TOOLS.map(tool => tool.category))), []);
+  const allTags = useMemo(() => 
+    Array.from(new Set(allPosts.map(p => p.tag))), 
+  [allPosts]);
 
   const filteredPosts = useMemo(() => 
-    allPosts.filter(post => 
-      post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.excerpt.toLowerCase().includes(searchQuery.toLowerCase())
-    ), [allPosts, searchQuery]);
+    allPosts.filter(post => {
+      const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesTag = !selectedTag || post.tag === selectedTag;
+      return matchesSearch && matchesTag;
+    }), [allPosts, searchQuery, selectedTag]);
 
-  const innerVoices = useMemo(() => 
-    allPosts.filter(p => p.tag === '内心独白').slice(0, 5)
-  , [allPosts]);
-
-  // 分页计算
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
-  const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
-
-  // 页面复位逻辑
   const resetScroll = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   const handlePostClick = (post: BlogPost | null) => {
@@ -78,19 +68,30 @@ const App: React.FC = () => {
     resetScroll();
   };
 
+  const handleRandomClick = () => {
+    const randomIndex = Math.floor(Math.random() * allPosts.length);
+    handlePostClick(allPosts[randomIndex]);
+  };
+
   const paginate = (pageNumber: number) => {
     setCurrentPage(pageNumber);
     resetScroll();
   };
 
+  const categories = useMemo(() => Array.from(new Set(TOOLS.map(tool => tool.category))), []);
+  const innerVoices = useMemo(() => 
+    allPosts.filter(p => p.tag === '内心独白').slice(0, 5)
+  , [allPosts]);
+
   return (
     <div className="container">
       <header className="header">
-        <h1 className="logo" onClick={() => { handlePostClick(null); setCurrentPage(1); }}>Using<span>AI</span></h1>
+        <h1 className="logo" onClick={() => { handlePostClick(null); setCurrentPage(1); setSelectedTag(null); }}>Using<span>AI</span></h1>
         <div className="header-actions">
+          <button className="random-btn" onClick={handleRandomClick} title="随机发现">🎲 试试手气</button>
           <input 
             type="text" 
-            placeholder="搜索灵感..." 
+            placeholder="搜索..." 
             className="search-input"
             value={searchQuery}
             onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
@@ -103,6 +104,7 @@ const App: React.FC = () => {
           {currentPost ? (
             <article className="post-detail">
               <button className="back-btn" onClick={() => handlePostClick(null)}>← 返回列表</button>
+              {currentPost.image && <div className="detail-hero" style={{backgroundImage: `url(${currentPost.image})`}}></div>}
               <div className="post-meta">
                 <span className="post-tag">{currentPost.tag}</span>
                 <span className="post-date">{currentPost.date}</span>
@@ -116,11 +118,16 @@ const App: React.FC = () => {
             </article>
           ) : (
             <>
-              <h2 className="area-title">精选文章 ({filteredPosts.length})</h2>
-              {currentPosts.length > 0 ? (
-                <>
-                  {currentPosts.map(post => (
-                    <article key={post.id} className="post-card" onClick={() => handlePostClick(post)}>
+              <div className="feed-header">
+                <h2 className="area-title">{selectedTag ? `话题: ${selectedTag}` : "精选文章"} ({filteredPosts.length})</h2>
+                {selectedTag && <button className="clear-tag" onClick={() => setSelectedTag(null)}>清除筛选 ×</button>}
+              </div>
+              
+              <div className="post-list">
+                {filteredPosts.slice((currentPage-1)*postsPerPage, currentPage*postsPerPage).map(post => (
+                  <article key={post.id} className="post-card" onClick={() => handlePostClick(post)}>
+                    {post.image && <div className="post-card-image" style={{backgroundImage: `url(${post.image})`}}></div>}
+                    <div className="post-card-content">
                       <div className="post-meta">
                         <span className="post-tag">{post.tag}</span>
                         <span className="post-date">{post.date}</span>
@@ -131,32 +138,38 @@ const App: React.FC = () => {
                         <span className="read-time">{post.readTime}</span>
                         <button className="read-more">阅读原文 →</button>
                       </div>
-                    </article>
-                  ))}
-                  
-                  {totalPages > 1 && (
-                    <div className="pagination">
-                      {Array.from({ length: totalPages }, (_, i) => (
-                        <button 
-                          key={i + 1} 
-                          onClick={() => paginate(i + 1)}
-                          className={`page-btn ${currentPage === i + 1 ? 'active' : ''}`}
-                        >
-                          {i + 1}
-                        </button>
-                      ))}
                     </div>
-                  )}
-                </>
-              ) : (
-                <p className="no-results">未找到相关内容</p>
+                  </article>
+                ))}
+              </div>
+              
+              {Math.ceil(filteredPosts.length / postsPerPage) > 1 && (
+                <div className="pagination">
+                  {Array.from({ length: Math.ceil(filteredPosts.length / postsPerPage) }, (_, i) => (
+                    <button key={i + 1} onClick={() => paginate(i + 1)} className={`page-btn ${currentPage === i + 1 ? 'active' : ''}`}>{i + 1}</button>
+                  ))}
+                </div>
               )}
             </>
           )}
         </main>
 
-        {/* 右侧：工具侧边栏 */}
         <aside className="sidebar">
+          <div className="category-group tag-cloud-section">
+            <h2 className="area-title">话题探索</h2>
+            <div className="tag-cloud">
+              {allTags.map(tag => (
+                <button 
+                  key={tag} 
+                  className={`tag-item ${selectedTag === tag ? 'active' : ''}`}
+                  onClick={() => { setSelectedTag(tag); handlePostClick(null); }}
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {innerVoices.length > 0 && (
             <div className="category-group reflection-section">
               <h2 className="area-title">内心独白</h2>
@@ -167,7 +180,7 @@ const App: React.FC = () => {
                       <span className="reflection-tag">#{voice.date}</span>
                     </div>
                     <p className="reflection-content">{voice.excerpt}</p>
-                    <span className="reflection-link">查看思考 →</span>
+                    <span className="reflection-link">深度思考 →</span>
                   </div>
                 ))}
               </div>
