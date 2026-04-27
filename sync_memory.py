@@ -7,11 +7,17 @@ MEMORY_DIR = "/home/zzh/.openclaw/workspace/memory"
 POSTS_DIR = "/mnt/c/Users/乐科/usingai/src/posts"
 
 def slugify(text):
-    text = re.sub(r'[^\x00-\x7F]+', '', text)
+    # 1. 将非英文字符（包括中文）替换为空格
+    text = re.sub(r'[^\x00-\x7F]+', ' ', text)
+    # 2. 转换为小写并清理
     text = text.lower().strip()
-    text = re.sub(r'[^a-z0-9\s-]', '', text)
-    text = re.sub(r'[-\s]+', '-', text)
-    return text.strip('-')[:25]
+    # 3. 只保留字母、数字和空格，移除标点
+    text = re.sub(r'[^a-z0-9\s]', '', text)
+    # 4. 将空格替换为连字符
+    text = re.sub(r'\s+', '-', text)
+    # 5. 限制长度并确保不为空
+    result = text.strip('-')[:35]
+    return result if result else "untitled-memo"
 
 def sync():
     if not os.path.exists(POSTS_DIR):
