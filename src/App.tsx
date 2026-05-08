@@ -44,6 +44,7 @@ const App: React.FC = () => {
   }, []);
 
   const allPosts = useMemo(() => {
+    // 强制合并静态博文和动态博文
     return [...STATIC_POSTS, ...dynamicPosts].sort((a, b) => 
       new Date(b.date).getTime() - new Date(a.date).getTime()
     );
@@ -69,6 +70,7 @@ const App: React.FC = () => {
   };
 
   const handleRandomClick = () => {
+    if (allPosts.length === 0) return;
     const randomIndex = Math.floor(Math.random() * allPosts.length);
     handlePostClick(allPosts[randomIndex]);
   };
@@ -126,7 +128,9 @@ const App: React.FC = () => {
               <div className="post-list">
                 {filteredPosts.slice((currentPage-1)*postsPerPage, currentPage*postsPerPage).map(post => (
                   <article key={post.id} className="post-card" onClick={() => handlePostClick(post)}>
-                    {post.image && <div className="post-card-image" style={{backgroundImage: `url(${post.image})`}}></div>}
+                    {post.image && (
+                      <div className="post-card-image" style={{backgroundImage: `url(${post.image})`}}></div>
+                    )}
                     <div className="post-card-content">
                       <div className="post-meta">
                         <span className="post-tag">{post.tag}</span>
