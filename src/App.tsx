@@ -126,24 +126,30 @@ const App: React.FC = () => {
               </div>
               
               <div className="post-list">
-                {filteredPosts.slice((currentPage-1)*postsPerPage, currentPage*postsPerPage).map(post => (
-                  <article key={post.id} className="post-card" onClick={() => handlePostClick(post)}>
-                    {post.image && (
-                      <div className="post-card-image" style={{backgroundImage: `url(${post.image})`}}></div>
-                    )}
-                    <div className="post-card-content">
-                      <div className="post-meta">
-                        <span className="post-tag">{post.tag}</span>
-                        <span className="post-date">{post.date}</span>
+                {filteredPosts.slice((currentPage-1)*postsPerPage, currentPage*postsPerPage).map((post, i) => (
+                  <div
+                    key={post.id}
+                    className="float-wrap"
+                    style={{ '--float-delay': `${(i % 10) * -0.7}s`, '--float-duration': `${4.5 + (i % 5)}s` } as React.CSSProperties}
+                  >
+                    <article className="post-card" onClick={() => handlePostClick(post)}>
+                      {post.image && (
+                        <div className="post-card-image" style={{backgroundImage: `url(${post.image})`}}></div>
+                      )}
+                      <div className="post-card-content">
+                        <div className="post-meta">
+                          <span className="post-tag">{post.tag}</span>
+                          <span className="post-date">{post.date}</span>
+                        </div>
+                        <h3 className="post-title">{post.title}</h3>
+                        <p className="post-excerpt">{post.excerpt}</p>
+                        <div className="post-footer">
+                          <span className="read-time">{post.readTime}</span>
+                          <button className="read-more">阅读原文 →</button>
+                        </div>
                       </div>
-                      <h3 className="post-title">{post.title}</h3>
-                      <p className="post-excerpt">{post.excerpt}</p>
-                      <div className="post-footer">
-                        <span className="read-time">{post.readTime}</span>
-                        <button className="read-more">阅读原文 →</button>
-                      </div>
-                    </div>
-                  </article>
+                    </article>
+                  </div>
                 ))}
               </div>
               
