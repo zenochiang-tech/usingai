@@ -1,0 +1,85 @@
+.space-bg-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: #04030a;
+}
+
+.space-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* 宇宙星云雾气与神秘光晕特效 */
+.nebula-cloud {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.28;
+  animation: nebula-pulse 18s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+.nebula-1 {
+  top: -10%;
+  left: 15%;
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(circle, rgba(123, 44, 191, 0.4), rgba(0, 210, 255, 0.15), transparent 70%);
+}
+
+.nebula-2 {
+  bottom: -20%;
+  right: -10%;
+  width: 70vw;
+  height: 70vw;
+  background: radial-gradient(circle, rgba(0, 180, 216, 0.35), rgba(114, 9, 183, 0.12), transparent 70%);
+  animation-duration: 24s;
+  animation-delay: -5s;
+}
+
+.nebula-3 {
+  top: 35%;
+  right: 25%;
+  width: 45vw;
+  height: 45vw;
+  background: radial-gradient(circle, rgba(247, 37, 133, 0.25), rgba(72, 149, 239, 0.1), transparent 70%);
+  animation-duration: 20s;
+  animation-delay: -10s;
+}
+
+@keyframes nebula-pulse {
+  0% {
+    transform: scale(1) translate(0, 0) rotate(0deg);
+    opacity: 0.25;
+  }
+  50% {
+    transform: scale(1.15) translate(30px, -20px) rotate(15deg);
+    opacity: 0.35;
+  }
+  100% {
+    transform: scale(0.95) translate(-25px, 25px) rotate(-10deg);
+    opacity: 0.22;
+  }
+}
+
+/* 宇宙神秘透视线阵列 */
+.cosmic-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(0, 210, 255, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.8) 0%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.8) 0%, transparent 80%);
+  opacity: 0.5;
+}

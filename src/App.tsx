@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { POSTS as STATIC_POSTS, TOOLS } from './data/content';
 import type { BlogPost } from './data/content';
+import { SpaceBackground } from './components/SpaceBackground';
 import './App.css';
 
 const markdownFiles = import.meta.glob('./posts/*.md', { eager: true, query: '?raw' });
@@ -87,6 +88,7 @@ const App: React.FC = () => {
 
   return (
     <div className="container">
+      <SpaceBackground />
       <header className="header">
         <h1 className="logo" onClick={() => { handlePostClick(null); setCurrentPage(1); setSelectedTag(null); }}>Using<span>AI</span></h1>
         <div className="header-actions">
