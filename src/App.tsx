@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { POSTS as STATIC_POSTS, TOOLS } from './data/content';
 import type { BlogPost } from './data/content';
 import { SpaceBackground } from './components/SpaceBackground';
+import { CyberHeader } from './components/CyberHeader';
 import './App.css';
 
 const markdownFiles = import.meta.glob('./posts/*.md', { eager: true, query: '?raw' });
@@ -89,19 +90,12 @@ const App: React.FC = () => {
   return (
     <div className="container">
       <SpaceBackground />
-      <header className="header">
-        <h1 className="logo" onClick={() => { handlePostClick(null); setCurrentPage(1); setSelectedTag(null); }}>Using<span>AI</span></h1>
-        <div className="header-actions">
-          <button className="random-btn" onClick={handleRandomClick} title="随机发现">🎲 试试手气</button>
-          <input 
-            type="text" 
-            placeholder="搜索..." 
-            className="search-input"
-            value={searchQuery}
-            onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-          />
-        </div>
-      </header>
+      <CyberHeader
+        onSearchChange={(q) => { setSearchQuery(q); setCurrentPage(1); }}
+        searchQuery={searchQuery}
+        onRandomClick={handleRandomClick}
+        onLogoClick={() => { handlePostClick(null); setCurrentPage(1); setSelectedTag(null); }}
+      />
 
       <div className="main-layout">
         <main className="blog-feed">
@@ -110,7 +104,7 @@ const App: React.FC = () => {
               <button className="back-btn" onClick={() => handlePostClick(null)}>← 返回列表</button>
               {currentPost.image && <div className="detail-hero" style={{backgroundImage: `url(${currentPost.image})`}}></div>}
               <div className="post-meta">
-                <span className="post-tag">{currentPost.tag}</span>
+                <span className="post-tag">[ {currentPost.tag} ]</span>
                 <span className="post-date">{currentPost.date}</span>
               </div>
               <h1 className="detail-title">{currentPost.title}</h1>
@@ -123,7 +117,11 @@ const App: React.FC = () => {
           ) : (
             <>
               <div className="feed-header">
-                <h2 className="area-title">{selectedTag ? `话题: ${selectedTag}` : "精选文章"} ({filteredPosts.length})</h2>
+                <h2 className="area-title">
+                  <span className="title-decor">»</span>
+                  {selectedTag ? ` 话题: ${selectedTag}` : " 精选文档与沉思"} 
+                  <span className="count-badge">{filteredPosts.length}</span>
+                </h2>
                 {selectedTag && <button className="clear-tag" onClick={() => setSelectedTag(null)}>清除筛选 ×</button>}
               </div>
               
@@ -134,22 +132,30 @@ const App: React.FC = () => {
                     className="float-wrap"
                     style={{ '--float-delay': `${(i % 10) * -0.7}s`, '--float-duration': `${4.5 + (i % 5)}s` } as React.CSSProperties}
                   >
-                    <article className="post-card" onClick={() => handlePostClick(post)}>
+                    <article className="post-card cyber-card" onClick={() => handlePostClick(post)}>
+                      <div className="card-top-bar">
+                        <span className="post-tag-pill">[ {post.tag} ]</span>
+                        <span className="post-date-badge">{post.date}</span>
+                      </div>
+                      
                       {post.image && (
                         <div className="post-card-image" style={{backgroundImage: `url(${post.image})`}}></div>
                       )}
+                      
                       <div className="post-card-content">
-                        <div className="post-meta">
-                          <span className="post-tag">{post.tag}</span>
-                          <span className="post-date">{post.date}</span>
-                        </div>
                         <h3 className="post-title">{post.title}</h3>
                         <p className="post-excerpt">{post.excerpt}</p>
                         <div className="post-footer">
-                          <span className="read-time">{post.readTime}</span>
-                          <button className="read-more">阅读原文 →</button>
+                          <span className="read-time">⏱ {post.readTime}</span>
+                          <button className="read-more">阅读全文 »</button>
                         </div>
                       </div>
+
+                      {/* 卡片炫酷 ASCII 边角装饰 */}
+                      <span className="card-bracket c-tl">┌</span>
+                      <span className="card-bracket c-tr">┐</span>
+                      <span className="card-bracket c-bl">└</span>
+                      <span className="card-bracket c-br">┘</span>
                     </article>
                   </div>
                 ))}
