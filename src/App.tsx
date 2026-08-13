@@ -234,6 +234,21 @@ const App: React.FC = () => {
               </div>
             </div>
           ))}
+
+          <div className="category-group yijing-section">
+            <h2 className="area-title">
+              <span className="title-decor">☯</span>
+              经典学研
+            </h2>
+            <a href="/yijing.html" target="_blank" rel="noopener noreferrer" className="yijing-card">
+              <div className="yijing-icon">☯</div>
+              <div className="yijing-info">
+                <h4>易经 · 六十四卦</h4>
+                <p>古典哲学与六十四卦全解</p>
+              </div>
+              <span className="yijing-arrow">进入 »</span>
+            </a>
+          </div>
         </aside>
       </div>
 

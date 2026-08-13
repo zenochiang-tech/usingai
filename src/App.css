@@ -566,6 +566,80 @@ main {
   font-size: 0.65rem;
 }
 
+/* 易经六十四卦特别推荐卡片 */
+.yijing-section {
+  margin-top: 25px;
+}
+
+.yijing-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: linear-gradient(135deg, rgba(14, 12, 28, 0.7), rgba(25, 20, 45, 0.7));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 243, 255, 0.3);
+  padding: 14px 18px;
+  border-radius: 16px;
+  text-decoration: none;
+  color: #fff;
+  transition: all 0.35s ease;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(0, 243, 255, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.yijing-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  border-color: #00f3ff;
+  box-shadow: 0 0 25px rgba(0, 243, 255, 0.4), 0 12px 30px rgba(0, 0, 0, 0.6);
+  background: linear-gradient(135deg, rgba(20, 18, 40, 0.85), rgba(40, 30, 70, 0.85));
+}
+
+.yijing-icon {
+  font-size: 1.8rem;
+  color: #00f3ff;
+  text-shadow: 0 0 12px #00f3ff;
+  transition: transform 0.5s ease;
+}
+
+.yijing-card:hover .yijing-icon {
+  transform: rotate(180deg);
+}
+
+.yijing-info {
+  flex: 1;
+}
+
+.yijing-info h4 {
+  font-family: 'Space Grotesk', 'Noto Serif SC', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-bottom: 2px;
+  letter-spacing: 0.5px;
+}
+
+.yijing-info p {
+  font-size: 0.72rem;
+  color: #94a3b8;
+}
+
+.yijing-arrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: #00f3ff;
+  font-weight: 700;
+  opacity: 0.8;
+  transition: all 0.3s ease;
+}
+
+.yijing-card:hover .yijing-arrow {
+  opacity: 1;
+  transform: translateX(4px);
+  text-shadow: 0 0 8px #00f3ff;
+}
+
 .footer {
   text-align: center;
   padding: 60px 0;
