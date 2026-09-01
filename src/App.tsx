@@ -237,6 +237,21 @@ const App: React.FC = () => {
 
           <div className="category-group yijing-section">
             <h2 className="area-title">
+              <span className="title-decor">✉</span>
+              专属服务
+            </h2>
+            <a href="https://mail.usingai.qzz.io" target="_blank" rel="noopener noreferrer" className="yijing-card mail-card">
+              <div className="yijing-icon mail-icon-glow">✉️</div>
+              <div className="yijing-info">
+                <h4>UsingAI 邮箱系统</h4>
+                <p>mail.usingai.qzz.io</p>
+              </div>
+              <span className="yijing-arrow">直达 »</span>
+            </a>
+          </div>
+
+          <div className="category-group yijing-section">
+            <h2 className="area-title">
               <span className="title-decor">☯</span>
               经典学研
             </h2>

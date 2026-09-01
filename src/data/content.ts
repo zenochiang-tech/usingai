@@ -101,5 +101,15 @@ export const TOOLS: AITool[] = [
     description: '词曲唱一体化，音质突破天际。',
     category: 'AI 音乐',
     isFree: true
+  },
+  {
+    id: 'usingai-mail',
+    name: 'UsingAI 邮箱',
+    tagline: '智能体专属邮箱系统',
+    icon: '✉️',
+    url: 'https://mail.usingai.qzz.io',
+    description: 'UsingAI 专有邮箱系统与通讯服务。',
+    category: '通讯与服务',
+    isFree: true
   }
 ];

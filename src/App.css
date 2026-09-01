@@ -596,11 +596,26 @@ main {
   background: linear-gradient(135deg, rgba(20, 18, 40, 0.85), rgba(40, 30, 70, 0.85));
 }
 
+.mail-card {
+  border-color: rgba(189, 147, 249, 0.4);
+}
+
+.mail-card:hover {
+  border-color: #bd93f9;
+  box-shadow: 0 0 25px rgba(189, 147, 249, 0.5), 0 12px 30px rgba(0, 0, 0, 0.6);
+  background: linear-gradient(135deg, rgba(30, 18, 50, 0.85), rgba(60, 25, 80, 0.85));
+}
+
 .yijing-icon {
   font-size: 1.8rem;
   color: #00f3ff;
   text-shadow: 0 0 12px #00f3ff;
   transition: transform 0.5s ease;
+}
+
+.mail-icon-glow {
+  color: #bd93f9;
+  text-shadow: 0 0 12px #bd93f9;
 }
 
 .yijing-card:hover .yijing-icon {

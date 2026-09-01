@@ -114,6 +114,17 @@ export const CyberHeader: React.FC<CyberHeaderProps> = ({
               <span className="input-cursor">_</span>
             </div>
 
+            <a
+              href="https://mail.usingai.qzz.io"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cyber-mail-btn"
+              title="UsingAI 邮箱系统"
+            >
+              <span className="mail-icon">✉️</span>
+              <span>邮箱系统</span>
+            </a>
+
             <button className="cyber-random-btn" onClick={onRandomClick}>
               <svg className="btn-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5" />
